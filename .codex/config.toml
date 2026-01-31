@@ -1,0 +1,9 @@
+# Project-scoped Codex config
+model = "gpt-5.2-codex"
+model_provider = "openai"
+
+# Let Codex read AGENTS.md guidance
+project_doc_max_bytes = 32768
+
+# Optional: make citations clickable in supported IDEs
+# file_opener = "vscode"

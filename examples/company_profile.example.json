@@ -1,0 +1,8 @@
+{
+  "company_name": "Demo Fleet Services",
+  "fleet": { "sedan": 12, "suv": 6, "muv": 4, "hatchback": 10, "model_year_min": 2020 },
+  "docs": { "gst": true, "pan": true, "permits": true, "insurance": true },
+  "financials": { "turnover_last_3y_inr": [8500000, 9200000, 11000000] },
+  "experience": { "govt_contracts_count": 2, "similar_work_years": 3.0 },
+  "operations": { "cities_served": ["Bengaluru", "Mysuru"], "drivers_available": 25, "24x7_capable": true }
+}

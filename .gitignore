@@ -1,0 +1,136 @@
+################################################################################
+# Python (base template)
+# Source: GitHub gitignore Python.gitignore (adapted)
+################################################################################
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+wheelhouse/
+pip-wheel-metadata/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.pytest_cache/
+pytestdebug.log
+
+# Type checkers / linters
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.pyright/
+ruff_cache/
+
+# Jupyter / notebooks
+.ipynb_checkpoints
+
+# Environments (venv)
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# macOS / Windows / Linux noise
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+################################################################################
+# Project-specific (TenderFit)
+################################################################################
+
+# Secrets / local config
+.env
+.env.*
+!.env.example
+
+# Local runtime outputs (generated)
+artifacts/
+reports/
+shortlists/
+outputs/
+tmp/
+temp/
+*.log
+
+# Downloaded documents (keep out of git unless you explicitly want fixtures)
+# If you later want small fixtures, add them under fixtures/ and whitelist there.
+docs_downloaded/
+data_downloaded/
+
+# Vector DB / indexes / caches
+index/
+indexes/
+faiss_index/
+chroma_db/
+storage/
+cache/
+caches/
+
+# PDF/text extraction intermediates (usually large)
+*.pdf
+*.pdf.zip
+*.jsonl
+*.parquet
+
+# If you store PDFs only under artifacts/, prefer this narrower rule instead:
+# artifacts/**/*.pdf
+
+################################################################################
+# Optional: keep these tracked if you use them
+################################################################################
+
+# Keep documentation and schema directories tracked (do NOT ignore)
+# docs/
+# schemas/
+# .codex/

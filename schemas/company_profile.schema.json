@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CompanyProfile",
+  "type": "object",
+  "required": ["company_name", "fleet", "docs", "financials", "experience", "operations"],
+  "properties": {
+    "company_name": { "type": "string" },
+    "fleet": {
+      "type": "object",
+      "required": ["sedan", "suv", "muv", "hatchback", "model_year_min"],
+      "properties": {
+        "sedan": { "type": "integer", "minimum": 0 },
+        "suv": { "type": "integer", "minimum": 0 },
+        "muv": { "type": "integer", "minimum": 0 },
+        "hatchback": { "type": "integer", "minimum": 0 },
+        "model_year_min": { "type": "integer" }
+      }
+    },
+    "docs": {
+      "type": "object",
+      "properties": {
+        "gst": { "type": "boolean" },
+        "pan": { "type": "boolean" },
+        "permits": { "type": "boolean" },
+        "insurance": { "type": "boolean" }
+      }
+    },
+    "financials": {
+      "type": "object",
+      "required": ["turnover_last_3y_inr"],
+      "properties": {
+        "turnover_last_3y_inr": {
+          "type": "array",
+          "items": { "type": "number", "minimum": 0 },
+          "minItems": 3,
+          "maxItems": 3
+        }
+      }
+    },
+    "experience": {
+      "type": "object",
+      "properties": {
+        "govt_contracts_count": { "type": "integer", "minimum": 0 },
+        "similar_work_years": { "type": "number", "minimum": 0 }
+      }
+    },
+    "operations": {
+      "type": "object",
+      "properties": {
+        "cities_served": { "type": "array", "items": { "type": "string" } },
+        "drivers_available": { "type": "integer", "minimum": 0 },
+        "24x7_capable": { "type": "boolean" }
+      }
+    }
+  }
+}
