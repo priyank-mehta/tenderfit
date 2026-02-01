@@ -1,12 +1,9 @@
 # TenderFit (Vehicle Hiring) — Multi-Agent Tender Research & Fit Scoring
 
-TenderFit scouts public GeM / BidPlus tenders for vehicle hiring (cab/taxi/SUV/MUV),
-collects bid documents and corrigenda, extracts eligibility and SLA constraints with
-citations, and scores Go/No-Go fit against a fleet operator profile.
+TenderFit scouts public GeM / BidPlus tenders for vehicle hiring (cab/taxi/SUV/MUV), collects bid documents and corrigenda, extracts eligibility and SLA constraints with citations, and scores Go/No-Go fit against a fleet operator profile.
 
 ## Why this is Track-3 worthy
-This is not a single-agent summarizer. TenderFit uses a coordinated multi-agent
-workflow with verification and consensus:
+This is not a single-agent summarizer. TenderFit uses a coordinated multi-agent workflow with verification and consensus:
 - Scout (find relevant tenders)
 - Collector (fetch docs + corrigenda with precedence)
 - Extractor (structured extraction)
@@ -30,6 +27,14 @@ and shortlist insights.
 
 ## Data policy
 We only fetch publicly accessible bid documents and do not require login.
+
+## Information flow
+1) Scout searches BidPlus listings (tokenized keywords + LLM filter).
+2) Collector fetches bid docs and corrigenda with precedence.
+3) Extractor pulls structured requirements with citations.
+4) Verifiers independently check evidence + quotes.
+5) Arbiter resolves conflicts and assigns fit scores.
+6) Shortlist ranks bids and emits CSV.
 
 ## Tech stack
 - Python 3.11+, FastAPI (API + SSE), Pydantic
@@ -58,6 +63,7 @@ Run agent eval suites:
 - `python3 -m tenderfit.cli eval --suite verifier`
 - `python3 -m tenderfit.cli eval --suite arbiter`
 - `python3 -m tenderfit.cli eval --suite shortlist`
+See `tenderfit/evals/README.md` for details.
 
 ## Credits / Dependencies
 - OpenAI API (LLM scoring, filtering)

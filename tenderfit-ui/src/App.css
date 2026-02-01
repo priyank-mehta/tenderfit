@@ -289,10 +289,12 @@ h1 {
 }
 
 .info-dot.field-info {
-  width: 16px;
-  height: 16px;
-  font-size: 0.65rem;
-  background: #f0f4f6;
+  width: 14px;
+  height: 14px;
+  font-size: 0.55rem;
+  border-style: dashed;
+  border-color: #cfd6df;
+  background: transparent;
 }
 
 .helper {
