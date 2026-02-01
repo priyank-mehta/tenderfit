@@ -1,4 +1,4 @@
-# TenderFit (Vehicle Hiring) — Multi-Agent Tender Research & Fit Scoring
+# TenderFit — Multi-Agent Tender Research & Fit Scoring
 
 TenderFit scouts public GeM / BidPlus tenders for vehicle hiring (cab/taxi/SUV/MUV), collects bid documents and corrigenda, extracts eligibility and SLA constraints with citations, and scores Go/No-Go fit against a fleet operator profile.
 
@@ -71,3 +71,6 @@ See `tenderfit/evals/README.md` for details.
 - FastAPI + Uvicorn
 - Pydantic
 - React + Vite
+
+Made with ❤️ by Priyank Mehta for AI Engineers Day Hackathon
+• Presented by OpenAI • Peak XV • Activate

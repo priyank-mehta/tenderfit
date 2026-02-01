@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 import json
 from pathlib import Path
+import time
 from typing import Any, Iterable
 from urllib.parse import urlparse
 
@@ -55,12 +56,16 @@ class TenderFitOrchestrator:
         temperature: float = 0.0,
         max_output_tokens: int | None = None,
         cache_dir: str | None = None,
+        request_timeout_s: float | None = 120.0,
+        max_retries: int = 2,
     ) -> None:
         self.client = OpenAI()
         self.model = model
         self.temperature = temperature
         self.max_output_tokens = max_output_tokens
         self.cache_dir = cache_dir
+        self.request_timeout_s = request_timeout_s
+        self.max_retries = max_retries
         self.logger = structlog.get_logger(__name__)
 
         self._scout = AgentSpec(
@@ -296,10 +301,25 @@ class TenderFitOrchestrator:
         }
         if self.max_output_tokens is not None:
             response_kwargs["max_output_tokens"] = self.max_output_tokens
-        response = self.client.responses.create(
-            **response_kwargs,
-        )
-        return self._parse_response(response)
+        if self.request_timeout_s is not None:
+            response_kwargs["timeout"] = self.request_timeout_s
+
+        for attempt in range(self.max_retries + 1):
+            try:
+                response = self.client.responses.create(
+                    **response_kwargs,
+                )
+                return self._parse_response(response)
+            except Exception as exc:
+                self.logger.warning(
+                    "agent.retry",
+                    agent=agent.name,
+                    attempt=attempt + 1,
+                    error=str(exc),
+                )
+                if attempt >= self.max_retries:
+                    raise
+                time.sleep(2 ** attempt)
 
     def _parse_response(self, response: Any) -> dict[str, Any]:
         if getattr(response, "output_parsed", None) is not None:

@@ -216,6 +216,8 @@ def _progress_worker(
 def _render_progress(stage: str, percent: int, bid_id: str | None) -> None:
     if _parallel_mode:
         if not bid_id:
+            if sys.stdout.isatty():
+                _ensure_dashboard().update_global_stage(stage, percent)
             return
         key = (bid_id, stage)
         with _progress_lock:
@@ -268,6 +270,10 @@ class ProgressDashboard:
                 self.bid_progress[bid_id].get(normalized, 0), percent
             )
         self._render()
+
+    def update_global_stage(self, stage: str, percent: int) -> None:
+        for bid_id in self.bid_progress.keys():
+            self.update_bid_stage(bid_id, stage, percent)
 
     def update_line(self, key: str, line: str) -> None:
         self.lines[key] = line
@@ -504,6 +510,8 @@ def _process_bid(bid_id: str, company: str) -> None:
     )
 
     _say("Step 3: Evaluating fit with citations.")
+    _say("Extractor is parsing documents. Verifiers will run in parallel.")
+    _say("Waiting on OpenAI responses for verifiers and arbiter. This can take a moment.")
     report_path = Path("reports") / f"{bid_id.replace('/', '-')}.md"
     _run_command(
         [
@@ -525,16 +533,16 @@ def run_demo() -> None:
     print(OWL_ART)
     _say("Welcome to the TenderFit demo. I will guide the full run.")
 
-    keywords = input("Enter keywords (e.g., 'cab taxi hiring'): ").strip()
+    keywords = input("Enter keywords (e.g., 'cabs taxi'): ").strip()
     if not keywords:
-        keywords = "cab taxi hiring"
+        keywords = "cabs taxi"
         _say(f"Using default keywords: {keywords}")
 
     company = _select_company_profile()
 
     _say("Step 1: Scouting for matching bids.")
     _say("Scanning BidPlus listings and applying keyword + LLM filters. This can take a bit.")
-    _start_progress("Scout", 18.0, None)
+    _start_progress("Scout", 10.0, None)
     use_llm_filter = bool(os.environ.get("OPENAI_API_KEY"))
     if not use_llm_filter:
         _say("No OPENAI_API_KEY found. Running scan without LLM filtering.")
@@ -547,18 +555,18 @@ def run_demo() -> None:
             "--keywords",
             keywords,
             "--days",
-            "14",
+            "2",
             "--top",
-            "20",
+            "5",
             "--max-pages",
-            "20",
+            "2",
             "--force-refresh",
         ]
         + (
             [
                 "--llm-filter",
                 "--llm-max-candidates",
-                "30",
+                "5",
                 "--llm-batch-size",
                 "5",
             ]
@@ -600,12 +608,14 @@ def run_demo() -> None:
         ]
         for future in concurrent.futures.as_completed(futures):
             future.result()
+    arbiter_stop = None
     if sys.stdout.isatty():
         dashboard = _ensure_dashboard()
         dashboard.add_event("🧠 Arbiter — global synthesis and decision roll-up")
+        arbiter_stop = threading.Event()
         arbiter_thread = threading.Thread(
             target=_progress_worker,
-            args=("Arbiter", threading.Event(), 12.0, None),
+            args=("Arbiter", arbiter_stop, 12.0, None),
             daemon=True,
         )
         arbiter_thread.start()
@@ -621,12 +631,17 @@ def run_demo() -> None:
             "--company",
             company,
             "--top",
-            "10",
+            "5",
+            "--bid-ids",
+            ",".join([bid["bid_id"] for bid in bids]),
             "--out",
             "shortlists/shortlist.csv",
         ]
     )
     if sys.stdout.isatty():
+        if arbiter_stop:
+            arbiter_stop.set()
+            _render_progress("Arbiter", 100, None)
         for bid in bids:
             _ensure_dashboard().update_bid_stage(bid["bid_id"], "arbiter", 100)
 

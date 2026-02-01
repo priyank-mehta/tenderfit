@@ -42,6 +42,7 @@ def build_parser() -> argparse.ArgumentParser:
     shortlist.add_argument("--company", required=True)
     shortlist.add_argument("--top", type=int, default=10)
     shortlist.add_argument("--out", required=True)
+    shortlist.add_argument("--bid-ids", help="Comma-separated bid IDs to include")
 
     eval_cmd = subparsers.add_parser("eval", help="Run eval suites")
     eval_cmd.add_argument("--suite", default="quick")
@@ -272,6 +273,10 @@ def main() -> None:
         if not report_files:
             raise SystemExit("No report JSON files found under reports/.")
 
+        allowed_ids = None
+        if args.bid_ids:
+            allowed_ids = {bid.strip() for bid in args.bid_ids.split(",") if bid.strip()}
+
         rows = []
         for path in report_files:
             try:
@@ -279,6 +284,8 @@ def main() -> None:
             except json.JSONDecodeError:
                 continue
             bid_id = report.get("bid_id")
+            if allowed_ids is not None and bid_id not in allowed_ids:
+                continue
             decision = report.get("decision")
             fit_score = report.get("fit_score")
             summary = report.get("summary")
