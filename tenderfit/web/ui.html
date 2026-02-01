@@ -1,0 +1,865 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TenderFit Workflow Studio</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Libre+Bodoni:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap");
+
+      :root {
+        --ink: #191612;
+        --paper: #f6efe6;
+        --paper-2: #efe5d7;
+        --accent: #d4683f;
+        --accent-2: #1f6a5c;
+        --accent-3: #c59b3a;
+        --muted: #6a6258;
+        --line: rgba(25, 22, 18, 0.12);
+        --shadow: 0 18px 40px rgba(23, 15, 8, 0.18);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Libre Bodoni", serif;
+        color: var(--ink);
+        background: radial-gradient(circle at 8% 12%, #f8dbc6 0%, transparent 40%),
+          radial-gradient(circle at 90% 12%, #dff1eb 0%, transparent 40%),
+          radial-gradient(circle at 20% 88%, #f1d0b8 0%, transparent 45%),
+          var(--paper);
+      }
+
+      header {
+        padding: 28px 6vw 8px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .eyebrow {
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        font-size: 11px;
+        color: var(--accent-2);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(30px, 4vw, 46px);
+        letter-spacing: -0.02em;
+      }
+
+      .subhead {
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .shell {
+        display: grid;
+        gap: 18px;
+        padding: 12px 6vw 60px;
+      }
+
+      .panel {
+        background: #fff7ee;
+        border-radius: 24px;
+        padding: 18px;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--line);
+      }
+
+      .stepper {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .step-pill {
+        border: 1px solid var(--line);
+        background: #f6efe6;
+        border-radius: 14px;
+        padding: 12px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .step-pill.active {
+        background: var(--accent-2);
+        color: #fff;
+        border-color: transparent;
+        box-shadow: 0 12px 22px rgba(31, 106, 92, 0.25);
+      }
+
+      .view {
+        display: none;
+      }
+
+      .view.active {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 18px;
+      }
+
+      .card {
+        background: #fffdf9;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 16px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .notice {
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px dashed var(--line);
+        background: #fff6e8;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .card-title {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--accent-2);
+      }
+
+      label {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      input,
+      select {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 10px 12px;
+        margin-top: 6px;
+        font-size: 13px;
+        font-family: "IBM Plex Mono", monospace;
+        background: #fff;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+      }
+
+      button {
+        border: none;
+        border-radius: 999px;
+        padding: 10px 18px;
+        font-weight: 700;
+        cursor: pointer;
+        background: var(--accent);
+        color: #fff;
+        box-shadow: 0 12px 20px rgba(212, 104, 63, 0.25);
+        transition: transform 0.2s ease;
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+      }
+
+      button:active {
+        transform: translateY(1px) scale(0.98);
+      }
+
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        box-shadow: none;
+        color: rgba(25, 22, 18, 0.65);
+        background: #efe6da;
+        border: 1px solid var(--line);
+      }
+
+      button.secondary {
+        background: #eee2d3;
+        color: var(--ink);
+        border: 1px solid var(--line);
+        box-shadow: none;
+      }
+
+      .pipeline {
+        display: grid;
+        gap: 10px;
+      }
+
+      .stage {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 10px 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #fffaf2;
+      }
+
+      .stage.running {
+        background: #fff1dc;
+        border-color: rgba(212, 104, 63, 0.6);
+        animation: glow 1.4s ease-in-out infinite;
+      }
+
+      .stage.done {
+        background: #e2f3ef;
+        border-color: rgba(31, 106, 92, 0.6);
+      }
+
+      .stage .state {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .logs,
+      .result,
+      .preview {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12px;
+        border-radius: 16px;
+        padding: 14px;
+        height: 260px;
+        overflow: auto;
+        white-space: pre-wrap;
+        border: 1px dashed var(--line);
+      }
+
+      .logs {
+        background: #0f0e0d;
+        color: #efe5d7;
+      }
+
+      .result,
+      .preview {
+        background: #fff;
+        color: var(--ink);
+      }
+
+      .result-path {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 8px;
+      }
+
+      .insights {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 10px;
+      }
+
+      .metric {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 10px 12px;
+        background: #fffaf2;
+      }
+
+      .metric-label {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--muted);
+      }
+
+      .metric-value {
+        font-size: 18px;
+        font-weight: 700;
+        margin-top: 4px;
+      }
+
+      .arbiter-bar {
+        display: grid;
+        gap: 10px;
+      }
+
+      .arbiter-track {
+        height: 12px;
+        border-radius: 999px;
+        background: #f1e6d8;
+        overflow: hidden;
+        border: 1px solid var(--line);
+      }
+
+      .arbiter-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--accent-3), var(--accent));
+        transition: width 0.4s ease;
+      }
+
+      .bid-filter {
+        display: grid;
+        gap: 8px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      @keyframes glow {
+        0% {
+          box-shadow: 0 0 0 rgba(212, 104, 63, 0.0);
+        }
+        50% {
+          box-shadow: 0 0 18px rgba(212, 104, 63, 0.35);
+        }
+        100% {
+          box-shadow: 0 0 0 rgba(212, 104, 63, 0.0);
+        }
+      }
+
+      @media (max-width: 1100px) {
+        .view.active {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .stepper {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="eyebrow">TenderFit Workflow Studio</div>
+      <h1>Decisions with proof, not guesses.</h1>
+      <p class="subhead">
+        Run the multi-agent pipeline step by step, watch each stage verify citations, and surface the best bids for your fleet profile.
+      </p>
+    </header>
+
+    <main class="shell">
+      <section class="panel">
+        <h2>Workflow</h2>
+        <div class="stepper">
+          <button class="step-pill active" data-step="0" onclick="setStep(0)">Step 1 · Scout</button>
+          <button class="step-pill" data-step="1" onclick="setStep(1)">Step 2 · Collect</button>
+          <button class="step-pill" data-step="2" onclick="setStep(2)">Step 3 · Evaluate</button>
+          <button class="step-pill" data-step="3" onclick="setStep(3)">Step 4 · Shortlist</button>
+        </div>
+      </section>
+
+      <section class="view active" data-view="0">
+        <div class="card">
+          <div class="card-title">Scout / Scan</div>
+          <p style="margin:0;color:var(--muted);font-size:14px;">
+            Query BidPlus listings, apply LLM filters, and cache matches for the Collector.
+          </p>
+          <div class="row" style="margin-top:12px;">
+            <div>
+              <label>Keywords</label>
+              <input id="scan-keywords" value="cab taxi hiring" />
+            </div>
+            <div>
+              <label>Days</label>
+              <input id="scan-days" type="number" value="14" />
+            </div>
+            <div>
+              <label>Top</label>
+              <input id="scan-top" type="number" value="30" />
+            </div>
+            <div>
+              <label>Max Pages</label>
+              <input id="scan-pages" type="number" value="20" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>LLM Filter</label>
+              <select id="scan-llm-filter">
+                <option value="true">On</option>
+                <option value="false">Off</option>
+              </select>
+            </div>
+            <div>
+              <label>Force Refresh</label>
+              <select id="scan-force-refresh">
+                <option value="false">Off</option>
+                <option value="true">On</option>
+              </select>
+            </div>
+            <div>
+              <label>LLM Max Candidates</label>
+              <input id="scan-llm-max" type="number" value="30" />
+            </div>
+            <div>
+              <label>LLM Batch Size</label>
+              <input id="scan-llm-batch" type="number" value="5" />
+            </div>
+          </div>
+          <button onclick="runScan()">Launch Scout</button>
+          <div class="notice hidden" id="scan-empty">
+            No bids returned. Try broader keywords or increase max pages.
+          </div>
+        </div>
+
+        <div class="card hidden" id="pipeline-card">
+          <div class="card-title">Live Pipeline</div>
+          <div class="pipeline" id="pipeline">
+            <div class="stage" data-stage="scout"><span>Scout</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="collector"><span>Collector</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="extractor"><span>Extractor</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="verifier-a"><span>Verifier A</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="verifier-b"><span>Verifier B</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="verifier-c"><span>Verifier C</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="arbiter"><span>Arbiter</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="shortlist"><span>Shortlist</span><span class="state">idle</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" data-view="1">
+        <div class="card">
+          <div class="card-title">Live Pipeline</div>
+          <div class="pipeline" id="pipeline-collect">
+            <div class="stage" data-stage="scout"><span>Scout</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="collector"><span>Collector</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="extractor"><span>Extractor</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="verifier-a"><span>Verifier A</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="verifier-b"><span>Verifier B</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="verifier-c"><span>Verifier C</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="arbiter"><span>Arbiter</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="shortlist"><span>Shortlist</span><span class="state">idle</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Collector Logs</div>
+          <div class="notice">
+            Live logs for each bid. Filter by Bid ID to isolate a single run.
+          </div>
+          <div class="bid-filter" style="margin-top:12px;">
+            <label>Logs — Bid Filter</label>
+            <input id="log-filter-collect" placeholder="GEM/2026/B/7074646" />
+          </div>
+          <div class="logs" id="logs"></div>
+        </div>
+      </section>
+
+      <section class="view" data-view="2">
+        <div class="card">
+          <div class="card-title">Live Pipeline</div>
+          <div class="pipeline" id="pipeline-eval">
+            <div class="stage" data-stage="scout"><span>Scout</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="collector"><span>Collector</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="extractor"><span>Extractor</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="verifier-a"><span>Verifier A</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="verifier-b"><span>Verifier B</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="verifier-c"><span>Verifier C</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="arbiter"><span>Arbiter</span><span class="state">idle</span></div>
+            <div class="stage" data-stage="shortlist"><span>Shortlist</span><span class="state">idle</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Evaluator Logs</div>
+          <div class="notice">
+            Evaluator logs stream here. Filter by Bid ID for per-bid traces.
+          </div>
+          <div class="bid-filter" style="margin-top:12px;">
+            <label>Logs — Bid Filter</label>
+            <input id="log-filter-eval" placeholder="GEM/2026/B/7074646" />
+          </div>
+          <div class="logs" id="logs-eval"></div>
+        </div>
+      </section>
+
+      <section class="view" data-view="3">
+        <div class="card">
+          <div class="card-title">Arbiter Progress</div>
+          <div class="arbiter-bar">
+            <div class="arbiter-track"><div class="arbiter-fill" id="arbiter-fill"></div></div>
+            <div class="result-path" id="arbiter-status">Waiting for evaluation output...</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Shortlist</div>
+          <div class="row">
+            <div>
+              <label>Top</label>
+              <input id="shortlist-top" type="number" value="10" />
+            </div>
+            <div>
+              <label>Company Profile</label>
+              <input id="shortlist-company" value="examples/company_profile.example.json" />
+            </div>
+          </div>
+          <button onclick="runShortlist()">Build Shortlist</button>
+        </div>
+
+        <div class="card hidden" id="result-card">
+          <div class="card-title">Result</div>
+          <div class="result" id="result"></div>
+          <div class="result-path" id="result-path"></div>
+        </div>
+
+        <div class="card hidden" id="insights-card">
+          <div class="card-title">Insights</div>
+          <div class="insights">
+            <div class="metric">
+              <div class="metric-label">Decision</div>
+              <div class="metric-value" id="metric-decision">—</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Fit Score</div>
+              <div class="metric-value" id="metric-score">—</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Best Bid</div>
+              <div class="metric-value" id="metric-best">—</div>
+            </div>
+          </div>
+          <div class="row" style="margin-top:12px;">
+            <button class="secondary" onclick="loadReport()">Load Report</button>
+            <button class="secondary" onclick="loadShortlist()">Load Shortlist</button>
+          </div>
+          <div class="preview" id="preview" style="margin-top:12px;"></div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      let activeStream = null;
+      let activeJobType = null;
+      let lastReportPath = null;
+      let lastShortlistPath = null;
+
+      const logs = document.getElementById("logs");
+      const logsEval = document.getElementById("logs-eval");
+      const result = document.getElementById("result");
+      const resultPath = document.getElementById("result-path");
+      const preview = document.getElementById("preview");
+      const metricDecision = document.getElementById("metric-decision");
+      const metricScore = document.getElementById("metric-score");
+      const metricBest = document.getElementById("metric-best");
+      const pipelineCard = document.getElementById("pipeline-card");
+      const pipeline = document.getElementById("pipeline");
+      const pipelineCollect = document.getElementById("pipeline-collect");
+      const pipelineEval = document.getElementById("pipeline-eval");
+      const arbiterFill = document.getElementById("arbiter-fill");
+      const arbiterStatus = document.getElementById("arbiter-status");
+      const logFilterCollect = document.getElementById("log-filter-collect");
+      const logFilterEval = document.getElementById("log-filter-eval");
+      const scanEmpty = document.getElementById("scan-empty");
+      const rawLogs = [];
+      const rawLogsEval = [];
+
+      function resetPipeline() {
+        document.querySelectorAll(".stage").forEach((stage) => {
+          stage.classList.remove("running", "done");
+          stage.querySelector(".state").textContent = "idle";
+        });
+        logs.textContent = "";
+        logsEval.textContent = "";
+        result.textContent = "";
+        resultPath.textContent = "";
+        preview.textContent = "";
+        metricDecision.textContent = "—";
+        metricScore.textContent = "—";
+        metricBest.textContent = "—";
+        lastReportPath = null;
+        lastShortlistPath = null;
+        pipelineCard.classList.add("hidden");
+        pipeline.classList.add("hidden");
+        arbiterFill.style.width = "0%";
+        arbiterStatus.textContent = "Waiting for evaluation output...";
+        scanEmpty.classList.add("hidden");
+      }
+
+      function setStep(stepIndex) {
+        document.querySelectorAll(".step-pill").forEach((pill) => {
+          pill.classList.toggle("active", Number(pill.dataset.step) === stepIndex);
+        });
+        document.querySelectorAll(".view").forEach((section) => {
+          section.classList.toggle("active", Number(section.dataset.view) === stepIndex);
+        });
+      }
+
+      function updateStage(stageId, status) {
+        document.querySelectorAll(`[data-stage="${stageId}"]`).forEach((stage) => {
+          stage.classList.remove("running", "done");
+          if (status === "running") {
+            stage.classList.add("running");
+          }
+          if (status === "done") {
+            stage.classList.add("done");
+          }
+          stage.querySelector(".state").textContent = status;
+        });
+      }
+
+      function applyLogFilter(rawList, output, filterValue) {
+        const lines = filterValue
+          ? rawList.filter((line) => line.includes(filterValue))
+          : rawList;
+        output.textContent = lines.join("\n");
+        output.scrollTop = output.scrollHeight;
+      }
+
+      function appendLog(line) {
+        if (activeJobType === "scan") {
+          pipelineCard.classList.remove("hidden");
+          pipeline.classList.remove("hidden");
+        }
+        if (activeJobType === "fetch") {
+          rawLogs.push(line);
+          applyLogFilter(rawLogs, logs, logFilterCollect.value.trim());
+        }
+        if (activeJobType === "evaluate") {
+          rawLogsEval.push(line);
+          applyLogFilter(rawLogsEval, logsEval, logFilterEval.value.trim());
+        }
+      }
+
+      function showResult(data) {
+        if (!data) return;
+        result.textContent = JSON.stringify(data, null, 2);
+        if (data.report_path) {
+          resultPath.textContent = `Report: ${data.report_path}`;
+          lastReportPath = data.report_path;
+        }
+        if (data.out) {
+          resultPath.textContent = `Output: ${data.out}`;
+          lastShortlistPath = data.out;
+          fetch(`/api/files?path=${encodeURIComponent(data.out)}`)
+            .then((res) => (res.ok ? res.json() : null))
+            .then((payload) => {
+              if (!payload) return;
+              const rows = (payload.content || "").trim().split("\n");
+              if (rows.length < 2) return;
+              const header = rows[0].split(",");
+              const bidIdx = header.indexOf("bid_id");
+              const scoreIdx = header.indexOf("fit_score");
+              let best = rows[1].split(",");
+              if (scoreIdx >= 0) {
+                best = rows
+                  .slice(1)
+                  .map((line) => line.split(","))
+                  .reduce((acc, row) => {
+                    const score = parseFloat(row[scoreIdx] || "-1");
+                    const bestScore = parseFloat(acc[scoreIdx] || "-1");
+                    return score > bestScore ? row : acc;
+                  }, best);
+              }
+              const bid = bidIdx >= 0 ? best[bidIdx] : best[0];
+              const score = scoreIdx >= 0 ? best[scoreIdx] : null;
+              metricBest.textContent = score ? `${bid} (${score})` : bid;
+              if (bid) {
+                const reportPath = `reports/${bid}.json`;
+                fetch(`/api/files?path=${encodeURIComponent(reportPath)}`)
+                  .then((res) => (res.ok ? res.json() : null))
+                  .then((reportPayload) => {
+                    if (!reportPayload) return;
+                    const report = JSON.parse(reportPayload.content || "{}");
+                    if (report.decision) metricDecision.textContent = report.decision;
+                    if (report.fit_score !== undefined) metricScore.textContent = report.fit_score;
+                  })
+                  .catch(() => {});
+              }
+            })
+            .catch(() => {});
+        }
+        if (data.report_json_path) {
+          fetch(`/api/files?path=${encodeURIComponent(data.report_json_path)}`)
+            .then((res) => (res.ok ? res.json() : null))
+            .then((payload) => {
+              if (!payload) return;
+              const report = JSON.parse(payload.content || "{}");
+              if (report.decision) metricDecision.textContent = report.decision;
+              if (report.fit_score !== undefined) metricScore.textContent = report.fit_score;
+            })
+            .catch(() => {});
+        }
+      }
+
+      async function fetchFile(path) {
+        if (!path) return;
+        const response = await fetch(`/api/files?path=${encodeURIComponent(path)}`);
+        if (!response.ok) {
+          preview.textContent = "Failed to load file.";
+          return;
+        }
+        const data = await response.json();
+        preview.textContent = data.content;
+      }
+
+      function loadReport() {
+        fetchFile(lastReportPath);
+      }
+
+      function loadShortlist() {
+        fetchFile(lastShortlistPath);
+      }
+
+      function handleEvent(event) {
+        if (event.type === "log") {
+          appendLog(event.line);
+        }
+        if (event.type === "stage") {
+          updateStage(event.stage, event.status);
+          if (event.stage === "collector") setStep(1);
+          if (event.stage === "extractor") setStep(2);
+          if (event.stage === "verifier-a") setStep(2);
+          if (event.stage === "arbiter") setStep(3);
+          if (event.stage === "shortlist") setStep(3);
+        }
+        if (event.type === "done") {
+          showResult(event.result);
+          document.querySelectorAll(".stage.running").forEach((stage) => {
+            stage.classList.remove("running");
+            stage.classList.add("done");
+            stage.querySelector(".state").textContent = "done";
+          });
+          if (activeJobType === "scan") setStep(1);
+          if (activeJobType === "fetch") setStep(2);
+          if (activeJobType === "evaluate") setStep(3);
+          if (activeJobType === "shortlist") setStep(3);
+          toggleButtons(false, activeJobType);
+          if (activeJobType === "shortlist") {
+            arbiterFill.style.width = "100%";
+            arbiterStatus.textContent = "Arbiter complete. Results ready.";
+            document.getElementById("result-card").classList.remove("hidden");
+            document.getElementById("insights-card").classList.remove("hidden");
+          }
+          if (activeJobType === "scan") {
+            if (event.result && Array.isArray(event.result.bids) && event.result.bids.length === 0) {
+              scanEmpty.classList.remove("hidden");
+            }
+          }
+        }
+        if (event.type === "error") {
+          appendLog(event.error || "Job failed");
+          toggleButtons(false, activeJobType);
+        }
+      }
+
+      function connectEvents(jobId) {
+        if (activeStream) {
+          activeStream.close();
+        }
+        activeStream = new EventSource(`/api/jobs/${jobId}/events`);
+        activeStream.onmessage = (message) => {
+          const event = JSON.parse(message.data);
+          handleEvent(event);
+        };
+      }
+
+      async function runJob(endpoint, payload) {
+        resetPipeline();
+        activeJobType = endpoint;
+        toggleButtons(true, endpoint);
+        if (endpoint === "evaluate" || endpoint === "shortlist") {
+          arbiterFill.style.width = "25%";
+          arbiterStatus.textContent = "Arbiter queued. Waiting for verifier quorum...";
+        }
+        const response = await fetch(`/api/jobs/${endpoint}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        connectEvents(data.job_id);
+      }
+
+      function toggleButtons(disabled, scope) {
+        const scopes = {
+          scan: "Launch Scout",
+          fetch: "Collect Docs",
+          evaluate: "Run Evaluation",
+          shortlist: "Build Shortlist",
+        };
+        const targetLabel = scope ? scopes[scope] : null;
+        document.querySelectorAll("button").forEach((btn) => {
+          if (btn.classList.contains("step-pill")) return;
+          if (!targetLabel) {
+            btn.disabled = disabled;
+            return;
+          }
+          const label = btn.textContent.trim();
+          if (label === targetLabel) {
+            btn.disabled = disabled;
+          }
+        });
+      }
+
+      function runScan() {
+        runJob("scan", {
+          keywords: document.getElementById("scan-keywords").value,
+          days: Number(document.getElementById("scan-days").value),
+          top: Number(document.getElementById("scan-top").value),
+          max_pages: Number(document.getElementById("scan-pages").value),
+          llm_filter: document.getElementById("scan-llm-filter").value === "true",
+          force_refresh: document.getElementById("scan-force-refresh").value === "true",
+          llm_max_candidates: Number(document.getElementById("scan-llm-max").value),
+          llm_batch_size: Number(document.getElementById("scan-llm-batch").value),
+        });
+      }
+
+      function runFetch() {
+        const bidId = document.getElementById("fetch-bid").value.trim();
+        if (!bidId) {
+          appendLog("Fetch requires a Bid ID. Paste one from the Scout results.");
+          return;
+        }
+        runJob("fetch", {
+          bid_id: bidId,
+          cache_dir: document.getElementById("fetch-cache").value || null,
+        });
+      }
+
+      function runEvaluate() {
+        const bidId = document.getElementById("eval-bid").value.trim();
+        if (!bidId) {
+          appendLog("Evaluate requires a Bid ID. Paste one from the Scout results.");
+          return;
+        }
+        runJob("evaluate", {
+          bid_id: bidId,
+          company_path: document.getElementById("eval-company").value,
+        });
+      }
+
+      function runShortlist() {
+        runJob("shortlist", {
+          top: Number(document.getElementById("shortlist-top").value),
+          company_path: document.getElementById("shortlist-company").value,
+        });
+      }
+
+      logFilterCollect.addEventListener("input", () => {
+        applyLogFilter(rawLogs, logs, logFilterCollect.value.trim());
+      });
+      logFilterEval.addEventListener("input", () => {
+        applyLogFilter(rawLogsEval, logsEval, logFilterEval.value.trim());
+      });
+    </script>
+  </body>
+</html>

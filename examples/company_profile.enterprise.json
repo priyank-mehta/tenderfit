@@ -1,0 +1,12 @@
+{
+  "company_name": "Enterprise Transit Group",
+  "fleet": { "sedan": 140, "suv": 60, "muv": 38, "hatchback": 70, "model_year_min": 2018 },
+  "docs": { "gst": true, "pan": true, "permits": true, "insurance": true },
+  "financials": { "turnover_last_3y_inr": [95000000, 115000000, 140000000] },
+  "experience": { "govt_contracts_count": 18, "similar_work_years": 9.0 },
+  "operations": {
+    "cities_served": ["Delhi", "Noida", "Gurugram", "Faridabad", "Ghaziabad", "Agra"],
+    "drivers_available": 420,
+    "24x7_capable": true
+  }
+}

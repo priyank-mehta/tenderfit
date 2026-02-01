@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EvidenceManifest",
+  "type": "object",
+  "required": ["bid_id", "documents"],
+  "properties": {
+    "bid_id": { "type": "string" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "documents": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Document" }
+    }
+  },
+  "definitions": {
+    "Document": {
+      "type": "object",
+      "required": ["doc_id", "source_url", "local_path", "doc_type"],
+      "properties": {
+        "doc_id": { "type": "string" },
+        "source_url": { "type": "string", "format": "uri" },
+        "local_path": { "type": "string" },
+        "doc_type": {
+          "type": "string",
+          "enum": ["base", "sla", "atc", "corrigendum", "other"]
+        },
+        "title": { "type": "string" },
+        "fetched_at": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

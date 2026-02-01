@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TenderFitReport",
+  "type": "object",
+  "required": ["bid_id", "decision", "fit_score", "eligibility", "gaps", "citations"],
+  "properties": {
+    "bid_id": { "type": "string" },
+    "decision": { "type": "string", "enum": ["GO", "NO_GO", "NEEDS_REVIEW"] },
+    "fit_score": { "type": "number", "minimum": 0, "maximum": 100 },
+    "summary": { "type": "string" },
+    "eligibility": {
+      "type": "object",
+      "required": ["pass", "reasons"],
+      "properties": {
+        "pass": { "type": "boolean" },
+        "reasons": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/EligibilityReason" }
+        }
+      }
+    },
+    "gaps": { "type": "array", "items": { "type": "string" } },
+    "citations": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "citations.schema.json" }
+    },
+    "requirements_reviewed": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "definitions": {
+    "EligibilityReason": {
+      "type": "object",
+      "required": ["requirement_id", "status", "notes", "citations"],
+      "properties": {
+        "requirement_id": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["PASS", "FAIL", "NEEDS_REVIEW"]
+        },
+        "notes": { "type": "string" },
+        "citations": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "citations.schema.json" }
+        }
+      }
+    }
+  }
+}

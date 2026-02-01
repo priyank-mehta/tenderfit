@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Citation",
+  "type": "object",
+  "required": ["source_url", "doc_type", "page", "quote", "anchor"],
+  "properties": {
+    "source_url": { "type": "string", "format": "uri" },
+    "doc_type": {
+      "type": "string",
+      "enum": ["base", "sla", "atc", "corrigendum", "other"]
+    },
+    "page": { "type": "integer", "minimum": 1 },
+    "quote": { "type": "string" },
+    "anchor": { "type": "string" },
+    "notes": { "type": "string" }
+  }
+}

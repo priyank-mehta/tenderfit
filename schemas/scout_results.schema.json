@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ScoutResults",
+  "type": "object",
+  "required": ["query", "bids"],
+  "properties": {
+    "query": { "type": "string" },
+    "bids": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/BidCandidate" }
+    },
+    "notes": { "type": "string" }
+  },
+  "definitions": {
+    "BidCandidate": {
+      "type": "object",
+      "required": ["bid_id", "title", "links"],
+      "properties": {
+        "bid_id": { "type": "string" },
+        "title": { "type": "string" },
+        "closing_date": { "type": "string", "format": "date" },
+        "links": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" }
+        },
+        "summary": { "type": "string" }
+      }
+    }
+  }
+}

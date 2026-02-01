@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="TenderFit Owl">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f7f8f9"/>
+      <stop offset="100%" stop-color="#eef2f6"/>
+    </linearGradient>
+    <linearGradient id="owlBody" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0b7a75"/>
+      <stop offset="100%" stop-color="#0ea5a3"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <g transform="translate(140 70)">
+    <rect width="920" height="490" rx="56" fill="#ffffff" stroke="#e3e8ee" stroke-width="6"/>
+    <g transform="translate(160 60)">
+      <rect width="200" height="200" rx="36" fill="#f7f8f9"/>
+      <circle cx="100" cy="120" r="64" fill="url(#owlBody)"/>
+      <circle cx="74" cy="96" r="22" fill="#ffffff"/>
+      <circle cx="126" cy="96" r="22" fill="#ffffff"/>
+      <circle cx="80" cy="100" r="8" fill="#0f1720"/>
+      <circle cx="120" cy="100" r="8" fill="#0f1720"/>
+      <path d="M100 116 l14 16 -14 14 -14 -14z" fill="#f6c453"/>
+    </g>
+    <text x="430" y="150" font-family="Newsreader, serif" font-size="64" fill="#0f1720">TenderFit</text>
+    <text x="430" y="210" font-family="Manrope, sans-serif" font-size="28" fill="#5f6c7b">Decisions with proof, not guesses.</text>
+  </g>
+</svg>

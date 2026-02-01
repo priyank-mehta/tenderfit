@@ -1,0 +1,22 @@
+[project]
+name = "tenderfit"
+version = "0.1.0"
+description = "TenderFit CLI-first multi-agent tender research and fit scoring."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "jsonschema>=4.21.0",
+  "openai>=1.12.0",
+  "pypdf>=4.2.0",
+  "pydantic>=2.6.0",
+  "structlog>=24.1.0",
+  "fastapi>=0.110.0",
+  "uvicorn>=0.29.0"
+]
+
+[project.scripts]
+tenderfit = "tenderfit.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

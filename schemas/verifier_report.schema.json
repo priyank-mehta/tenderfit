@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "VerifierReport",
+  "type": "object",
+  "required": ["bid_id", "verifier_id", "summary", "results"],
+  "properties": {
+    "bid_id": { "type": "string" },
+    "verifier_id": { "type": "string" },
+    "summary": { "$ref": "#/definitions/Summary" },
+    "results": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/VerifierResult" }
+    }
+  },
+  "definitions": {
+    "Summary": {
+      "type": "object",
+      "required": ["passed", "failed", "needs_review"],
+      "properties": {
+        "passed": { "type": "integer", "minimum": 0 },
+        "failed": { "type": "integer", "minimum": 0 },
+        "needs_review": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "VerifierResult": {
+      "type": "object",
+      "required": ["requirement_id", "status", "notes"],
+      "properties": {
+        "requirement_id": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["PASS", "FAIL", "NEEDS_REVIEW"]
+        },
+        "notes": { "type": "string" },
+        "citations": {
+          "type": "array",
+          "items": { "$ref": "citations.schema.json" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "company_name": "Midsize Mobility Co",
+  "fleet": { "sedan": 40, "suv": 18, "muv": 10, "hatchback": 22, "model_year_min": 2019 },
+  "docs": { "gst": true, "pan": true, "permits": true, "insurance": true },
+  "financials": { "turnover_last_3y_inr": [22000000, 25500000, 30000000] },
+  "experience": { "govt_contracts_count": 6, "similar_work_years": 5.0 },
+  "operations": {
+    "cities_served": ["Mumbai", "Pune", "Nashik", "Aurangabad"],
+    "drivers_available": 120,
+    "24x7_capable": true
+  }
+}
